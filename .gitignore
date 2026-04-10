@@ -1,3 +1,4 @@
 .pytest_cache/
-test/_pycache_/
 src/*egg*/
+/src/autograd/__pycache__
+/tests/__pycache__
