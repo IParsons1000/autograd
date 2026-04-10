@@ -1,4 +1,4 @@
-class Value:
+class Scalar:
     """ store scalar value and its gradient """
 
     def __init__(self, data, _children=(), _op=''):
@@ -18,8 +18,8 @@ class Value:
 
     # addition operator
     def __add__(self, other):
-        other = other if isinstance(other, Value) else Value(other)
-        out = Value(self.data + other.data, (self, other), '+')
+        other = other if isinstance(other, Scalar) else Scalar(other)
+        out = Scalar(self.data + other.data, (self, other), '+')
 
         def _backward():
             self.grad += out.grad
@@ -40,8 +40,8 @@ class Value:
 
     # multiplication operator
     def __mul__(self, other):
-        other = other if isinstance(other, Value) else Value(other)
-        out = Value(self.data * other.data, (self, other), '*')
+        other = other if isinstance(other, Scalar) else Scalar(other)
+        out = Scalar(self.data * other.data, (self, other), '*')
 
         def _backward():
             self.grad += other.data * out.grad
@@ -63,7 +63,7 @@ class Value:
     # power operator
     def __pow__(self, other):
         assert isinstance(other, (int, float))
-        out = Value(self.data**other, (self,), f'**{other}')
+        out = Scalar(self.data**other, (self,), f'**{other}')
 
         def _backward():
             self.grad += (other * self.data**(other - 1) * out.grad)
@@ -76,7 +76,7 @@ class Value:
     """
 
     def __repr__(self):
-        return f"Value(data={self.data}, grad={self.grad})"
+        return f"Scalar(data={self.data}, grad={self.grad})"
 
     # backpropogation
     def backward(self):

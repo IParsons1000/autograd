@@ -2,3 +2,4 @@
 src/*egg*/
 /src/autograd/__pycache__
 /tests/__pycache__
+/build

@@ -1,1 +1,2 @@
-from .autograd import *
+from .scalar import *
+from .tensor import *
