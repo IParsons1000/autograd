@@ -1,0 +1,25 @@
+<!--- vim: syntax=markdown
+-->
+
+autograd
+========
+
+a lightweight autograd package
+
+Building
+--------
+
+To build the autograd package, run
+
+```bash
+python3 -m build
+```
+
+Installation
+------------
+
+To install autograd on your system, run
+
+```bash
+pip install .
+```
