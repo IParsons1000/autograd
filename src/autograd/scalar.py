@@ -1,5 +1,5 @@
 class Scalar:
-    """ store scalar value and its gradient """
+    """ store value and its gradient """
 
     def __init__(self, data, _children=(), _op=''):
         self.data = data
@@ -7,6 +7,8 @@ class Scalar:
         self._backward = lambda: None
         self._prev = set(_children)
         self._op = _op
+        self.types = (int, float)
+        self.ones = 1
 
     """
     Arithmetic
@@ -22,8 +24,8 @@ class Scalar:
         out = Scalar(self.data + other.data, (self, other), '+')
 
         def _backward():
-            self.grad += out.grad
-            other.grad += out.grad
+            self.grad = self.grad + out.grad
+            other.grad = other.grad + out.grad
         out._backward = _backward
 
         return out
@@ -44,8 +46,8 @@ class Scalar:
         out = Scalar(self.data * other.data, (self, other), '*')
 
         def _backward():
-            self.grad += other.data * out.grad
-            other.grad += self.data * out.grad
+            self.grad = self.grad + (other.data * out.grad)
+            other.grad = other.grad + (self.data * out.grad)
         out._backward = _backward
 
         return out
@@ -62,11 +64,11 @@ class Scalar:
 
     # power operator
     def __pow__(self, other):
-        assert isinstance(other, (int, float))
+        assert isinstance(other, self.types)
         out = Scalar(self.data**other, (self,), f'**{other}')
 
         def _backward():
-            self.grad += (other * self.data**(other - 1) * out.grad)
+            self.grad = self.grad + (other * self.data**(other - 1) * out.grad)
         out._backward = _backward
 
         return out
@@ -95,6 +97,6 @@ class Scalar:
         build_topo(self)
 
         # apply chain rule
-        self.grad = 1
+        self.grad = self.ones
         for v in reversed(topo):
             v._backward()
